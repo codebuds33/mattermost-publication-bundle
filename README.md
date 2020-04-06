@@ -40,10 +40,10 @@ public function submitDonationForm(MattermostPublication $publication)
 In an eventSubscriber you can inject the publisher in the constructor :
 
 ```php
-    public function __construct(MattermostPublication $publication)
-    {
-        $this->publication = $publication;
-    }
+public function __construct(MattermostPublication $publication)
+{
+    $this->publication = $publication;
+}
 ```
 
 and then, inside any function, you can publish a message thanks to the bundle :
@@ -83,5 +83,5 @@ You can render it and use it like the following :
 
 ```php
 $messageText = $this->twig->render('mattermost/message.twig', ['message' => $message]);
-            $this->publication->publish($messageText);
+$this->publication->publish($messageText);
 ```
