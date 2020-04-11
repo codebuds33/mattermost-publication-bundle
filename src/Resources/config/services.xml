@@ -6,7 +6,6 @@
 
     <services>
         <service id="codebuds_mattermost_publication.mattermost_publication" class="CodeBuds\MattermostPublicationBundle\MattermostPublication" public="true"/>
-
         <service id="CodeBuds\MattermostPublicationBundle\MattermostPublication" alias="codebuds_mattermost_publication.mattermost_publication" public="true"/>
     </services>
 </container>
