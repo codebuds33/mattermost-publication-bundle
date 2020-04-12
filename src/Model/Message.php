@@ -5,6 +5,8 @@ namespace CodeBuds\MattermostPublicationBundle\Model;
 
 class Message
 {
+    private ?string $webhookUrl;
+
     private ?string $text;
 
     private ?string $username;
@@ -15,19 +17,31 @@ class Message
 
     public function __construct()
     {
+        $this->webhookUrl = null;
         $this->text = null;
         $this->username = null;
         $this->iconUrl = null;
         $this->channel = null;
     }
 
+    public function getWebhookUrl(): ?string
+    {
+        return $this->webhookUrl;
+    }
+
+    public function setWebhookUrl(?string $webhookUrl): Message
+    {
+        $this->webhookUrl = $webhookUrl;
+
+        return $this;
+    }
 
     public function getText(): ?string
     {
         return $this->text;
     }
 
-    public function setText(string $text): Message
+    public function setText(?string $text): Message
     {
         $this->text = $text;
 
@@ -39,7 +53,7 @@ class Message
         return $this->username;
     }
 
-    public function setUsername(string $username): Message
+    public function setUsername(?string $username): Message
     {
         $this->username = $username;
 
@@ -51,7 +65,7 @@ class Message
         return $this->iconUrl;
     }
 
-    public function setIconUrl(string $iconUrl): Message
+    public function setIconUrl(?string $iconUrl): Message
     {
         $this->iconUrl = $iconUrl;
 
@@ -63,7 +77,7 @@ class Message
         return $this->channel;
     }
 
-    public function setChannel(string $channel): Message
+    public function setChannel(?string $channel): Message
     {
         $this->channel = $channel;
 
@@ -73,6 +87,7 @@ class Message
     public function toArray()
     {
         $array = [
+            'webhook_url' => $this->getText(),
             'text' => $this->getText(),
             'username' => $this->getUsername(),
             'icon_url' => $this->getIconUrl(),

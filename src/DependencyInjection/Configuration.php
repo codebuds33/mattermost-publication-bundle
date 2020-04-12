@@ -15,6 +15,9 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode("webhook_url")->defaultValue("http://{your-mattermost-site}/hooks/xxx-generatedkey-xxx")->end()
+                ->scalarNode("username")->defaultNull()->end()
+                ->scalarNode("icon_url")->defaultNull()->end()
+                ->scalarNode("channel")->defaultNull()->end()
             ->end();
 
         return $treeBuilder;

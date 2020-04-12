@@ -9,6 +9,9 @@ In order to do so you need to add configuration to your symfony by, for example,
 ```yaml
 mattermost_publication:
   webhook_url: '%env(MATTERMOST_WEBHOOK_URL)%'
+  username: 'My general username'
+  channel: 'general-channel'
+  icon_url: 'https://mysite.com/build/static/my_logo.webp'
 ```
 
 and adding the webhook URL to your environment variables :
@@ -19,11 +22,13 @@ MATTERMOST_WEBHOOK_URL="http://{your-mattermost-site}/hooks/xxx-generatedkey-xxx
 ###< codebuds/mattermost-publication###
 ```
 
+This will set the general configuration for all publications. If these are not set you have to make sure to at least add a webhook URL to the message element you want to publish.
+
 ## Usage
 
 ### Basic text publication
 
-You can use the publisher directly inside a controller function by adding it as a parameter : 
+You can use the publisher directly inside a controller function by adding it as a parameter (if you have a general webhook_url configured): 
 
 ```php
 /**
@@ -92,7 +97,7 @@ $messageText = $this->twig->render('mattermost/message.twig', ['message' => $mes
 $this->publication->publish($messageText);
 ```
 
-### Configured punlication
+### Configured publication
 
 As it was possible to publish simple text it is also possible to configure the message to all available Mattermost incoming webhook features.
 
@@ -108,18 +113,21 @@ class MyController extends AbstractController
 {
     public function submitDonationForm(MattermostPublication $publication, Environment $twig)
     {
-            $variable = "I am a variable";
-            try {
-                $mmMessage = (new MMMessage())
-                    ->setText($twig->render('mattermost/mymessage.md.twig', ['myVariable' => $variable]))
-                    ->setUsername('MyUsername')
-                    ->setChannel('MyChannel')
-                    ->setIconUrl('https://mysite.com/build/static/my_logo.webp');
-    
-                $publication->publish($mmMessage);
-            } catch (\Exception $e) {
-                return $e->getMessage();
-            }
+        $variable = "I am a variable";
+        try {
+            $mmMessage = (new MMMessage())
+                ->setText($twig->render('mattermost/mymessage.md.twig', ['myVariable' => $variable]))
+                ->setUsername('MyUsername')
+                ->setChannel('MyChannel')
+                ->setIconUrl('https://mysite.com/build/static/my_logo.webp')
+                ->setWebhookUrl('http://otherwebhookurl');
+
+            $publication->publish($mmMessage);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
 ```
+
+Doing it this way will override the general settings from the configuration file. If something has been set in the configuration file and the setter is not used the general value will be in the message.
