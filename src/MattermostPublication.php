@@ -14,17 +14,18 @@ class MattermostPublication
 
     private string $webhookUrl;
 
-    public function __construct(string $webhookUrl)
+    private ?string $username;
+
+    private ?string $iconUrl;
+
+    private ?string $channel;
+
+    public function __construct(string $webhookUrl, ?string $username, ?string $iconUrl, ?string $channel)
     {
-        if(!$webhookUrl){
-            throw new Exception("Please provide the mattermost webhook url");
-        }
-
-        if($webhookUrl === 'http://{your-mattermost-site}/hooks/xxx-generatedkey-xxx'){
-            throw new Exception("Please provide a real mattermost webhook url");
-        }
-
         $this->webhookUrl = $webhookUrl;
+        $this->username = $username;
+        $this->iconUrl = $iconUrl;
+        $this->channel = $channel;
     }
 
     /**
@@ -35,24 +36,46 @@ class MattermostPublication
     public function publish($message)
     {
         $message instanceof Message
-            ? $this->publishRequest($message->toArray())
-            : $this->publishRequest(['text' => $message]);
+            ?: $message = (new Message())->setText($message);
+
+        $message->setIconUrl($message->getIconUrl() ?? $this->iconUrl);
+        $message->setUsername($message->getUsername() ?? $this->username);
+        $message->setChannel($message->getChannel() ?? $this->channel);
+        $message->setWebhookUrl($message->getWebhookUrl() ?? $this->webhookUrl);
+
+        $this->publishRequest($message);
     }
 
     /**
-     * @param array $body
-     * @return int
-     * @throws \Exception
+     * @param Message $message
+     * @return void
      * @throws TransportExceptionInterface
+     * @throws \Exception
      */
-    private function publishRequest(array $body)
+    private function publishRequest(Message $message)
     {
+        if($message->getWebhookUrl() === null){
+            $errors[]= "No webhook URL set for message";
+        }
+
+        if($message->getText() === null){
+            $errors[]= "No text set for message";
+        }
+
+        if(isset($errors)) {
+            $message = array_reduce($errors, function($carry, $error){
+                $carry .= "Error: {$error} ";
+                return $carry;
+            });
+            throw new \Exception($message);
+        }
+
         $client = HttpClient::create();
-        $request = $client->request('POST', $this->webhookUrl, [
+        $request = $client->request('POST', $message->getWebhookUrl(), [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
-            'json' => $body
+            'json' => $message->toArray()
         ]);
         if($request->getStatusCode() !== 200){
             throw new \Exception("Publication failed, verify the channel and the settings for the webhook");

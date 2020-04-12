@@ -24,5 +24,8 @@ class MattermostPublicationExtension extends Extension
 
         $definition = $container->getDefinition("codebuds_mattermost_publication.mattermost_publication");
         $definition->setArgument(0, $config['webhook_url']);
+        $definition->setArgument(1, $config['username']);
+        $definition->setArgument(2, $config['icon_url']);
+        $definition->setArgument(3, $config['channel']);
     }
 }
