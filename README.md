@@ -132,7 +132,7 @@ class MyController extends AbstractController
 
 Doing it this way will override the general settings from the configuration file. If something has been set in the configuration file and the setter is not used the general value will be in the message.
 
-If you want to send a direct message and the incoming webhook is not locked to a channel in mattermost you can set the channel to the username preced by `@` :
+If you want to send a direct message and the incoming webhook is not locked to a channel in mattermost you can set the channel to the username preceded by `@` :
 
 ```php
 $publication->publish((new Message())

@@ -5,14 +5,14 @@ namespace CodeBuds\MattermostPublicationBundle;
 
 
 use CodeBuds\MattermostPublicationBundle\Model\Message;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Exception;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class MattermostPublication
 {
 
-    private string $webhookUrl;
+    private ?string $webhookUrl;
 
     private ?string $username;
 
@@ -20,7 +20,7 @@ class MattermostPublication
 
     private ?string $channel;
 
-    public function __construct(string $webhookUrl, ?string $username, ?string $iconUrl, ?string $channel)
+    public function __construct(?string $webhookUrl, ?string $username, ?string $iconUrl, ?string $channel)
     {
         $this->webhookUrl = $webhookUrl;
         $this->username = $username;
@@ -50,7 +50,7 @@ class MattermostPublication
      * @param Message $message
      * @return void
      * @throws TransportExceptionInterface
-     * @throws \Exception
+     * @throws Exception
      */
     private function publishRequest(Message $message)
     {
@@ -67,18 +67,24 @@ class MattermostPublication
                 $carry .= "Error: {$error} ";
                 return $carry;
             });
-            throw new \Exception($message);
+            throw new Exception($message);
         }
 
-        $client = HttpClient::create();
-        $request = $client->request('POST', $message->getWebhookUrl(), [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'json' => $message->toArray()
-        ]);
+        $request = HttpClient::create()
+            ->request(
+                'POST',
+                $message->getWebhookUrl(),
+                [
+                'headers' =>
+                    [
+                        'Content-Type' => 'application/json',
+                    ],
+                'json' => $message->toArray()
+                ]
+            );
+
         if ($request->getStatusCode() !== 200) {
-            throw new \Exception("Publication failed, verify the channel and the settings for the webhook");
+            throw new Exception("Publication failed, verify the channel and the settings for the webhook");
         };
     }
 
