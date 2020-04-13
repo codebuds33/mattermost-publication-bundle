@@ -54,16 +54,16 @@ class MattermostPublication
      */
     private function publishRequest(Message $message)
     {
-        if($message->getWebhookUrl() === null){
-            $errors[]= "No webhook URL set for message";
+        if ($message->getWebhookUrl() === null) {
+            $errors[] = "No webhook URL set for message";
         }
 
-        if($message->getText() === null){
-            $errors[]= "No text set for message";
+        if ($message->getText() === null) {
+            $errors[] = "No text set for message";
         }
 
-        if(isset($errors)) {
-            $message = array_reduce($errors, function($carry, $error){
+        if (isset($errors)) {
+            $message = array_reduce($errors, function ($carry, $error) {
                 $carry .= "Error: {$error} ";
                 return $carry;
             });
@@ -77,7 +77,7 @@ class MattermostPublication
             ],
             'json' => $message->toArray()
         ]);
-        if($request->getStatusCode() !== 200){
+        if ($request->getStatusCode() !== 200) {
             throw new \Exception("Publication failed, verify the channel and the settings for the webhook");
         };
     }

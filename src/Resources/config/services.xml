@@ -5,7 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="codebuds_mattermost_publication.mattermost_publication" class="CodeBuds\MattermostPublicationBundle\MattermostPublication" public="true"/>
-        <service id="CodeBuds\MattermostPublicationBundle\MattermostPublication" alias="codebuds_mattermost_publication.mattermost_publication" public="true"/>
+        <service id="codebuds_mattermost_publication.mattermost_publication"
+                 class="CodeBuds\MattermostPublicationBundle\MattermostPublication" public="true"/>
+        <service id="CodeBuds\MattermostPublicationBundle\MattermostPublication"
+                 alias="codebuds_mattermost_publication.mattermost_publication" public="true"/>
     </services>
 </container>

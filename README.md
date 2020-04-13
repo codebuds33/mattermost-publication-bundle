@@ -77,7 +77,7 @@ try {
 }
 ```
 
-You can also use twig to create message templates, if you create the following template file in templates/mattermost/message.twig :
+You can also use twig to create message templates, if you create the following template file in templates/mattermost/message.md.twig :
 ```twig
 # New contact form submission
 
@@ -93,7 +93,7 @@ You can also use twig to create message templates, if you create the following t
 You can render it and use it like the following : 
 
 ```php
-$messageText = $this->twig->render('mattermost/message.twig', ['message' => $message]);
+$messageText = $this->twig->render('mattermost/message.md.twig', ['message' => $message]);
 $this->publication->publish($messageText);
 ```
 
@@ -131,3 +131,11 @@ class MyController extends AbstractController
 ```
 
 Doing it this way will override the general settings from the configuration file. If something has been set in the configuration file and the setter is not used the general value will be in the message.
+
+If you want to send a direct message and the incoming webhook is not locked to a channel in mattermost you can set the channel to the username preced by `@` :
+
+```php
+$publication->publish((new Message())
+    ->setText("Hello John !")
+    ->setChannel("@john"));
+```
