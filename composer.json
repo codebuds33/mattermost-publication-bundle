@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^8.0",
     "symfony/http-client": "^5.0"
   },
   "autoload": {
@@ -19,6 +19,6 @@
     }
   },
   "require-dev": {
-    "symfony/framework-bundle": "^5.0"
+    "symfony/framework-bundle": "^5.2"
   }
 }

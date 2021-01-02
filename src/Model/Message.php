@@ -5,95 +5,86 @@ namespace CodeBuds\MattermostPublicationBundle\Model;
 
 class Message
 {
-    private ?string $webhookUrl;
+	public function __construct(
+		private ?string $webhookUrl = null,
+		private ?string $text = null,
+		private ?string $username = null,
+		private ?string $iconUrl = null,
+		private ?string $channel = null,
+	)
+	{
+	}
 
-    private ?string $text;
+	public function getWebhookUrl(): ?string
+	{
+		return $this->webhookUrl;
+	}
 
-    private ?string $username;
+	public function setWebhookUrl(?string $webhookUrl): Message
+	{
+		$this->webhookUrl = $webhookUrl;
 
-    private ?string $iconUrl;
+		return $this;
+	}
 
-    private ?string $channel;
+	public function setText(?string $text): Message
+	{
+		$this->text = $text;
 
-    public function __construct()
-    {
-        $this->webhookUrl = null;
-        $this->text = null;
-        $this->username = null;
-        $this->iconUrl = null;
-        $this->channel = null;
-    }
+		return $this;
+	}
 
-    public function getWebhookUrl(): ?string
-    {
-        return $this->webhookUrl;
-    }
+	public function setUsername(?string $username): Message
+	{
+		$this->username = $username;
 
-    public function setWebhookUrl(?string $webhookUrl): Message
-    {
-        $this->webhookUrl = $webhookUrl;
+		return $this;
+	}
 
-        return $this;
-    }
+	public function setIconUrl(?string $iconUrl): Message
+	{
+		$this->iconUrl = $iconUrl;
 
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
+		return $this;
+	}
 
-    public function setText(?string $text): Message
-    {
-        $this->text = $text;
+	public function setChannel(?string $channel): Message
+	{
+		$this->channel = $channel;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
+	public function toArray()
+	{
+		$array = [
+			'webhook_url' => $this->getText(),
+			'text' => $this->getText(),
+			'username' => $this->getUsername(),
+			'icon_url' => $this->getIconUrl(),
+			'channel' => $this->getChannel()
+		];
 
-    public function setUsername(?string $username): Message
-    {
-        $this->username = $username;
+		return array_filter($array, fn($var) => $var !== null);
+	}
 
-        return $this;
-    }
+	public function getText(): ?string
+	{
+		return $this->text;
+	}
 
-    public function getIconUrl(): ?string
-    {
-        return $this->iconUrl;
-    }
+	public function getUsername(): ?string
+	{
+		return $this->username;
+	}
 
-    public function setIconUrl(?string $iconUrl): Message
-    {
-        $this->iconUrl = $iconUrl;
+	public function getIconUrl(): ?string
+	{
+		return $this->iconUrl;
+	}
 
-        return $this;
-    }
-
-    public function getChannel(): ?string
-    {
-        return $this->channel;
-    }
-
-    public function setChannel(?string $channel): Message
-    {
-        $this->channel = $channel;
-
-        return $this;
-    }
-
-    public function toArray()
-    {
-        $array = [
-            'webhook_url' => $this->getText(),
-            'text' => $this->getText(),
-            'username' => $this->getUsername(),
-            'icon_url' => $this->getIconUrl(),
-            'channel' => $this->getChannel()
-        ];
-
-        return array_filter($array, fn($var) => $var !== null);
-    }
+	public function getChannel(): ?string
+	{
+		return $this->channel;
+	}
 }
